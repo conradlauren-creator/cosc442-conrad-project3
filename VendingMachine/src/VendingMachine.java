@@ -195,10 +195,13 @@ public class VendingMachine {
 	public boolean makePurchase(String code) {
 		boolean returnCode = false;
 		VendingMachineItem item = getItem(code);
+		// INJECTED FAULT FOR COVERAGE EXPERIMENT
 		if ((item != null) && (this.balance >= item.getPrice())) {
 			removeItem(code);
 			this.balance -= item.getPrice();
 			returnCode = true;
+		} else {
+			returnCode = false;
 		}
 		return returnCode;
 	}

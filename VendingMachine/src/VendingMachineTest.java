@@ -16,8 +16,10 @@ public class VendingMachineTest {
     void setUp() {
         // ARRANGE
         myVending = new VendingMachine();
+
         myItem = new VendingMachineItem("Chips", 1.25);
         myVending.addItem(myItem, "A"); //adds an item to A
+
         myVending.balance = 10;
     }
 
@@ -60,11 +62,19 @@ public class VendingMachineTest {
     }
 
     @Test
-    void testAddNullItem() {
+    void testAddNullItemName() {
         //ASSERT
         assertThrows(
-		    VendingMachineException.class, 
-        () -> myVending.addItem(null, "C"));
+		     VendingMachineException.class, 
+        () -> myVending.addItem(null, "B"));
+    }
+
+    @Test
+    void testAddNullItemCode() {
+        //ASSERT
+        assertThrows(
+		    java.lang.NullPointerException.class, 
+        () -> myVending.addItem(myItem, null));
     }
 
     @Test
@@ -81,7 +91,7 @@ public class VendingMachineTest {
     }
 
     @Test
-    void testGetNullItem() {
+    void testGetNullSlot() {
         //ASSERT
         assertNull(myVending.getItem("D"));
     }
@@ -141,7 +151,13 @@ public class VendingMachineTest {
         () -> myVending.makePurchase("F"));
     }
 
+    @Test
+    void testMakePurchaseWithNullItem() {
+        //Currently slot C is empty and therefore null
+        //ASSERT
+        assertFalse(myVending.makePurchase("C"));
 
+    }
 
     @Test
     void testRemoveItem() {
