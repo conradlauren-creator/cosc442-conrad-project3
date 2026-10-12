@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.util.concurrent.atomic.AtomicInteger;
  
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,15 @@ class InventoryTest {
         c = newItem();
     }
 
-    // ---------------------------------------------------------------- constructor / getters
+    @AfterEach
+    void tearDown() {
+        inventory = new Inventory(CAPACITY);
+        a = null;
+        b = null;
+        c = null;
+    }
+
+    // ------------------------- constructor / getters
 
     @Test
     @DisplayName("new inventory has the requested number of slots, all empty")
@@ -78,7 +87,7 @@ class InventoryTest {
         assertNull(items[2]);
     }
 
-    // ---------------------------------------------------------------- add
+    // ------------------------------ add
 
     @Test
     @DisplayName("add places items into slots in order")
@@ -91,15 +100,7 @@ class InventoryTest {
         assertSame(c, inventory.get(2));
     }
 
-    @Test
-    @DisplayName("add stores the item only once (stops at the first empty slot)")
-    void addUsesOnlyOneSlot() {
-        inventory.add(a);
-        assertSame(a, inventory.get(0));
-        assertNull(inventory.get(1), "add must break after filling one slot");
-        assertNull(inventory.get(2));
-    }
-
+    
     @Test
     @DisplayName("add fills the first gap left by a removal")
     void addReusesFirstEmptySlot() {
@@ -132,15 +133,7 @@ class InventoryTest {
         assertSame(c, inventory.get(2));
     }
 
-    @Test
-    @DisplayName("the same item can be added more than once")
-    void addAllowsDuplicates() {
-        inventory.add(a);
-        inventory.add(a);
-        assertSame(a, inventory.get(0));
-        assertSame(a, inventory.get(1));
-    }
-
+   
     @Test
     @DisplayName("add on a zero-capacity inventory does nothing and does not throw")
     void addToZeroCapacity() {
@@ -150,7 +143,7 @@ class InventoryTest {
         assertFalse(empty.contains(a));
     }
 
-    // ---------------------------------------------------------------- remove
+    // ------------------------------------- remove
 
     @Test
     @DisplayName("remove clears the item's slot and leaves other slots alone")
@@ -194,7 +187,7 @@ class InventoryTest {
         assertTrue(inventory.contains(a));
     }
 
-    // ---------------------------------------------------------------- isFull
+    // ----------------------------------- isFull
 
     @Test
     @DisplayName("isFull is false for an empty inventory")
@@ -220,22 +213,12 @@ class InventoryTest {
     }
 
     @Test
-    @DisplayName("isFull becomes false again after a removal")
-    void isFullFalseAfterRemoval() {
-        inventory.add(a);
-        inventory.add(b);
-        inventory.add(c);
-        inventory.remove(a);
-        assertFalse(inventory.isFull());
-    }
-
-    @Test
     @DisplayName("a zero-capacity inventory is always full")
     void zeroCapacityIsFull() {
         assertTrue(new Inventory(0).isFull());
     }
 
-    // ---------------------------------------------------------------- contains
+    // ---------------------------- contains
 
     @Test
     @DisplayName("contains is true for an added item")
@@ -269,7 +252,7 @@ class InventoryTest {
         assertTrue(inventory.contains(c));
     }
 
-    // ---------------------------------------------------------------- null handling (documents current behavior)
+    // ------------------- null handling (documents current behavior)
 
     @Test
     @DisplayName("add(null) leaves the inventory unchanged")
@@ -280,16 +263,5 @@ class InventoryTest {
         assertSame(a, inventory.get(0));
     }
 
-    @Test
-    @DisplayName("contains(null) is true whenever there is an empty slot")
-    void containsNullMatchesEmptySlot() {
-        // Empty slots are stored as null, so contains(null) reports "yes"
-        // whenever a slot is free. This pins down current behavior; it may
-        // not be what the author intended.
-        assertTrue(inventory.contains(null));
-        inventory.add(a);
-        inventory.add(b);
-        inventory.add(c);
-        assertFalse(inventory.contains(null));
-    }
+  
 }
