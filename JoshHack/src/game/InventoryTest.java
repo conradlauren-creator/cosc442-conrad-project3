@@ -252,8 +252,6 @@ class InventoryTest {
         assertTrue(inventory.contains(c));
     }
 
-    // ------------------- null handling (documents current behavior)
-
     @Test
     @DisplayName("add(null) leaves the inventory unchanged")
     void addNullOccupiesNothing() {
