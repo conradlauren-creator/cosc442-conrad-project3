@@ -195,8 +195,7 @@ public class VendingMachine {
 	public boolean makePurchase(String code) {
 		boolean returnCode = false;
 		VendingMachineItem item = getItem(code);
-		// INJECTED FAULT FOR COVERAGE EXPERIMENT
-		if ((item != null) && (this.balance > item.getPrice())) {
+		if ((item != null) && (this.balance >= item.getPrice())) {
 			removeItem(code);
 			this.balance -= item.getPrice();
 			returnCode = true;
@@ -213,7 +212,6 @@ public class VendingMachine {
 	 * 
 	 * @return The amount of change in the machine
 	 */
-	// INJECTED FAULT FOR TEST VALIDATION
 	public double returnChange() {
 		double change = this.balance;
 		this.balance = 0;
